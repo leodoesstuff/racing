@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monza Arcade Multiplayer</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Arcade Multiplayer</p>
+        <h1>Monza Sprint</h1>
+        <p class="lede">Host a lobby, invite friends, add AI, and burn ERS down the Rettifilo.</p>
+      </div>
+      <div class="badge">Top-down • Node-powered</div>
+    </header>
+
+    <main class="grid">
+      <section class="panel">
+        <h2>Session Control</h2>
+        <form id="create-form" class="stack">
+          <label>
+            Host name
+            <input type="text" name="hostName" placeholder="Captain" />
+          </label>
+          <label>
+            AI drivers
+            <input type="number" name="aiCount" min="0" max="6" value="2" />
+          </label>
+          <button type="submit">Create Lobby</button>
+        </form>
+
+        <form id="join-form" class="stack">
+          <label>
+            Lobby ID
+            <input type="text" name="lobbyId" placeholder="Copy from host" />
+          </label>
+          <label>
+            Driver name
+            <input type="text" name="driverName" placeholder="Falcon" />
+          </label>
+          <button type="submit">Join Lobby</button>
+        </form>
+
+        <div id="lobby-meta" class="meta"></div>
+        <button id="add-ai" type="button" class="ghost" disabled>Add AI driver</button>
+      </section>
+
+      <section class="panel canvas-panel">
+        <div class="canvas-header">
+          <div>
+            <p class="eyebrow">Monza</p>
+            <h2>Race View</h2>
+          </div>
+          <div id="hud"></div>
+        </div>
+        <canvas id="track" width="960" height="640"></canvas>
+        <p class="controls">Controls: Arrow Up = throttle, Arrow Down = lift, Shift = ERS, D = DRS (in zone).</p>
+      </section>
+    </main>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
