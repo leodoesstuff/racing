@@ -15,3 +15,18 @@ Then open http://localhost:3000 to create or join a lobby, add AI, and drive.
 - The server is authoritative and streams state via SSE to the client.
 - Inputs are posted on a short interval; DRS is only effective in the two configured zones.
 - ERS drains when active and recharges slowly when idle. Slipstream gives a mild boost if you are tucked behind another car.
+
+## Deploying on Render
+
+There are no external dependencies, so deployment is lightweight:
+
+1. Push this repo to GitHub.
+2. In Render, create a **Web Service** from the repo.
+3. Set **Environment** to **Node** (Node 20+ recommended).
+4. Build command: `npm install`  
+   Start command: `node server/index.js`
+5. Health check path: `/api/health`
+6. Auto-assign the **PORT** env var (Render does this automatically); the server binds to it.
+7. Optional: set **Root Directory** to `/` (project root).
+
+Static assets are served from `client/public` by the same Node service, so a single web service is sufficient. For persistence (lobbies reset on deploy), add a datastore later and wire it into `server/index.js`.
