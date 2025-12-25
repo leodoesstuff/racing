@@ -1,0 +1,10 @@
+{
+  "name": "racing-client",
+  "version": "1.0.0",
+  "description": "Static client for the arcade F1-style top-down racer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo \"Static client served by the server\""
+  }
+}

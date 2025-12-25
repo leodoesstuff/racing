@@ -1,0 +1,17 @@
+{
+  "name": "racing",
+  "version": "1.0.0",
+  "description": "Arcade F1-inspired top-down multiplayer racer",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "npm --workspace server run dev",
+    "start": "npm --workspace server run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}
