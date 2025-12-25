@@ -13,6 +13,7 @@ const ctx = canvas.getContext('2d');
 const hud = document.querySelector('#hud');
 const lobbyMeta = document.querySelector('#lobby-meta');
 const addAiButton = document.querySelector('#add-ai');
+const board = document.querySelector('#board');
 
 const submitJSON = (url, payload) =>
   fetch(url, {
@@ -78,7 +79,7 @@ function connectToLobby(lobbyId, playerId, driverName) {
 function attachInputHandlers() {
   const keys = new Set();
   const updateInputs = () => {
-    state.inputs.throttle = keys.has('ArrowUp') ? 1 : 0.1;
+    state.inputs.throttle = keys.has('ArrowUp') ? 1 : 0;
     state.inputs.brake = keys.has('ArrowDown') ? 1 : 0;
     state.inputs.drs = keys.has('KeyD');
     state.inputs.ers = keys.has('ShiftLeft') || keys.has('ShiftRight');
@@ -115,14 +116,31 @@ function drawTrack() {
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 
-  ctx.strokeStyle = '#1f8ceb';
-  ctx.lineWidth = 0.022;
+  const grd = ctx.createLinearGradient(0, 0, 1, 1);
+  grd.addColorStop(0, '#082032');
+  grd.addColorStop(1, '#04070f');
+  ctx.fillStyle = grd;
+  ctx.fillRect(-0.05, -0.05, 1.1, 1.1);
+
+  ctx.strokeStyle = '#0ef0c7';
+  ctx.lineWidth = 0.028;
   ctx.beginPath();
   points.forEach(([x, y], i) => {
     if (i === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   });
   ctx.stroke();
+
+  ctx.strokeStyle = '#17213a';
+  ctx.lineWidth = 0.04;
+  ctx.setLineDash([0.02, 0.02]);
+  ctx.beginPath();
+  points.forEach(([x, y], i) => {
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  ctx.setLineDash([]);
 
   ctx.strokeStyle = '#30e0a1';
   ctx.lineWidth = 0.007;
@@ -174,24 +192,29 @@ function drawCars() {
   ctx.scale(w * 0.9, h * 0.9);
 
   state.cars.forEach((car) => {
-    const pos = mapProgress(car.progress);
+    const pos = car.x !== undefined ? { x: car.x, y: car.y } : mapProgress(car.progress);
+    const angle = car.heading || 0;
     ctx.save();
     ctx.translate(pos.x, pos.y);
+    ctx.rotate(angle);
     ctx.fillStyle = car.color;
     ctx.beginPath();
-    ctx.arc(0, 0, 0.012, 0, Math.PI * 2);
+    ctx.moveTo(0.018, 0);
+    ctx.lineTo(-0.014, 0.012);
+    ctx.lineTo(-0.014, -0.012);
+    ctx.closePath();
     ctx.fill();
 
     if (car.drsActive) {
       ctx.strokeStyle = '#30e0a1';
-      ctx.lineWidth = 0.004;
-      ctx.strokeRect(-0.018, -0.018, 0.036, 0.036);
+      ctx.lineWidth = 0.003;
+      ctx.strokeRect(-0.02, -0.016, 0.04, 0.032);
     }
     if (car.ersActive) {
       ctx.strokeStyle = '#ffcf44';
       ctx.lineWidth = 0.003;
       ctx.beginPath();
-      ctx.arc(0, 0, 0.02, 0, Math.PI * 2);
+      ctx.arc(0, 0, 0.022, 0, Math.PI * 2);
       ctx.stroke();
     }
 
@@ -215,11 +238,27 @@ function updateHud() {
   `;
 }
 
+function updateBoard() {
+  if (!state.cars) return;
+  const sorted = [...state.cars].sort((a, b) => b.progress - a.progress);
+  board.innerHTML = sorted
+    .map(
+      (car, idx) => `
+      <div class="row">
+        <div><span>#${idx + 1}</span> <strong style="color:${car.color}">${car.name}</strong></div>
+        <div><span>${car.velocity.toFixed(1)} m/s</span></div>
+      </div>
+    `
+    )
+    .join('');
+}
+
 function renderLoop() {
   if (state.track) {
     drawTrack();
     drawCars();
     updateHud();
+    updateBoard();
   }
   requestAnimationFrame(renderLoop);
 }

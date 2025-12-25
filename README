@@ -10,11 +10,14 @@ node server/index.js
 
 Then open http://localhost:3000 to create or join a lobby, add AI, and drive.
 
+Controls: **↑ throttle**, **↓ brake**, **D = DRS** (in zone), **Shift = ERS**.
+
 ## Notes
 
 - The server is authoritative and streams state via SSE to the client.
 - Inputs are posted on a short interval; DRS is only effective in the two configured zones.
 - ERS drains when active and recharges slowly when idle. Slipstream gives a mild boost if you are tucked behind another car.
+- The client renders a retro CRT-inspired top-down view with neon track outlines and a running order board.
 
 ## Deploying on Render
 
