@@ -222,33 +222,22 @@ function serializeLobby(lobby) {
   const cars = [
     ...Array.from(lobby.players.values()),
     ...lobby.ai
-  ].map((car) => {
-    const pose = mapProgressToPoint(car.progress);
-    return {
-      id: car.id,
-      name: car.name,
-      type: car.type,
-      color: car.color,
-      progress: car.progress,
-      x: pose.x,
-      y: pose.y,
-      heading: pose.heading,
-      velocity: car.velocity,
-      energy: car.energy,
-      drsActive: car.drsActive,
-      ersActive: car.ersActive
-    };
-  });
+  ].map((car) => ({
+    id: car.id,
+    name: car.name,
+    type: car.type,
+    color: car.color,
+    progress: car.progress,
+    velocity: car.velocity,
+    energy: car.energy,
+    drsActive: car.drsActive,
+    ersActive: car.ersActive
+  }));
 
   return {
     lobbyId: lobby.id,
     tick: lobby.tick,
-    track: {
-      name: TRACK.name,
-      length: TRACK.length,
-      drsZones: TRACK.drsZones,
-      slipstreamRange: TRACK.slipstreamRange
-    },
+    track: { name: TRACK.name, length: TRACK.length },
     cars
   };
 }
@@ -310,8 +299,7 @@ const server = http.createServer(async (req, res) => {
       points: TRACK.points,
       segmentLengths: TRACK.segmentLengths,
       polylineLength: TRACK.polylineLength,
-      drsZones: TRACK.drsZones,
-      slipstreamRange: TRACK.slipstreamRange
+      drsZones: TRACK.drsZones
     }));
     return;
   }
@@ -339,7 +327,7 @@ const server = http.createServer(async (req, res) => {
       const body = await parseJsonBody(req);
       const name = body.name || 'Driver';
       const playerId = randomUUID();
-  lobby.players.set(playerId, buildCar(name, playerId, 'human', lobby.players.size + lobby.ai.length));
+      lobby.players.set(playerId, buildCar(name, playerId, 'human', lobby.players.size + lobby.ai.length));
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ lobbyId, playerId }));
     } catch (err) {
