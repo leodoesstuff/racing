@@ -1,1 +1,17 @@
-WOW
+# Monza Arcade Multiplayer
+
+Web-first, Node-powered, top-down F1-inspired racer with lobbies, AI drivers, DRS, ERS, and slipstream modeling for Monza.
+
+## Quick start
+
+```bash
+node server/index.js
+```
+
+Then open http://localhost:3000 to create or join a lobby, add AI, and drive.
+
+## Notes
+
+- The server is authoritative and streams state via SSE to the client.
+- Inputs are posted on a short interval; DRS is only effective in the two configured zones.
+- ERS drains when active and recharges slowly when idle. Slipstream gives a mild boost if you are tucked behind another car.

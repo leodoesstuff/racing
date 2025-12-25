@@ -1,0 +1,11 @@
+{
+  "name": "racing-server",
+  "version": "1.0.0",
+  "description": "Authoritative game server for the arcade F1-style top-down racer",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  }
+}
